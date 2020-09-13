@@ -1,11 +1,13 @@
 /* eslint-disable no-useless-constructor */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
+import giphy from 'giphy-api';
 
 import SearchBar from './search_bar';
 import Gif from './gif';
 import GifList from './gif_list';
-import giphy from 'giphy-api'
+
+const GIPHY_API_KEY = 'VKY2j9HcokSbYHIWVdOzSZdqBWI881eU'
 
 class App extends Component {
   constructor(props) {
@@ -18,21 +20,25 @@ class App extends Component {
   }
 
   search = (query) => {
-    giphy('VKY2j9HcokSbYHIWVdOzSZdqBWI881eU').search({
-      q: query,
-      rating: "g"
-    }, (error, result) => {
-      this.setState({
-        gifs: result.data
+    giphy({ apiKey: GIPHY_API_KEY, https: true })
+      .search({
+        q: query,
+        rating: "g",
+        limit: 20
+      }, (error, result) => {
+        this.setState({
+          gifs: result.data
+        });
       });
+  }
+
+  selectGif = (id) => {
+    this.setState({
+      selectedGifId: id
     });
   }
 
   render() {
-    const gifs = [
-      { id: '5wWf7H89PisM6An8UAU' },
-      { id: "5wWf7GW1AzV6pF3MaVW" }
-    ]
     return (
       <div>
         <div className="left-scene">
@@ -42,7 +48,7 @@ class App extends Component {
           </div>
         </div>
         <div className="right-scene">
-          <GifList gifs={this.state.gifs} />
+          <GifList gifs={this.state.gifs} selectGif={this.selectGif} />
         </div>
       </div>
     );
