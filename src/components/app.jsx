@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import SearchBar from './search_bar';
 import Gif from './gif';
 import GifList from './gif_list';
+import giphy from 'giphy-api'
 
 class App extends Component {
   constructor(props) {
@@ -17,7 +18,14 @@ class App extends Component {
   }
 
   search = (query) => {
-    // TODO: API CALL
+    giphy('VKY2j9HcokSbYHIWVdOzSZdqBWI881eU').search({
+      q: query,
+      rating: "g"
+    }, (error, result) => {
+      this.setState({
+        gifs: result.data
+      });
+    });
   }
 
   render() {
@@ -28,7 +36,7 @@ class App extends Component {
     return (
       <div>
         <div className="left-scene">
-          <SearchBar />
+          <SearchBar searchFunction={this.search} />
           <div className="selected-gif">
             <Gif id={this.state.selectedGifId} />
           </div>
